@@ -10,10 +10,8 @@ A secure, schedule-driven voting platform built with Python and Django. VoterApp
 - [Tech Stack](#tech-stack)
 - [System Flow](#system-flow)
 - [Getting Started](#getting-started)
-- [Project Structure](#project-structure)
 - [Security Considerations](#security-considerations)
 - [Contributing](#contributing)
-- [License](#license)
 
 ---
 
@@ -102,11 +100,9 @@ A secure, schedule-driven voting platform built with Python and Django. VoterApp
 
 ### Installation
 
-```bash
-# Clone the repository
-git clone <repository-url>
-cd <project-directory>
+Clone the repository, open a terminal in the project folder (the one containing `manage.py`), and run:
 
+```bash
 # Create and activate a virtual environment
 python -m venv venv
 source venv/bin/activate        # On Windows: venv\Scripts\activate
@@ -128,22 +124,6 @@ The application will be available at `http://127.0.0.1:8000/`.
 
 ---
 
-## Project Structure
-
-```text
-<project-directory>/
-|-- manage.py
-|-- requirements.txt
-|-- <project_config>/       # Django project settings and URL configuration
-|-- <app_name>/             # Core application: models, views, forms, templates
-|-- media/                  # Uploaded option images and generated QR codes
-`-- static/                 # CSS, JavaScript, and static assets
-```
-
-Adjust the directory names above to match the repository layout.
-
----
-
 ## Security Considerations
 
 - Vote receipts are generated with Python's `secrets` module and do not reveal ballot choices.
@@ -161,9 +141,3 @@ Contributions are welcome. To propose a change:
 2. Create a feature branch: `git checkout -b feature/your-feature-name`.
 3. Commit your changes with clear messages.
 4. Push the branch and open a pull request describing the change.
-
----
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details. Replace this section if you choose a different license.
