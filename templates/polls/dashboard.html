@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - VoterApp{% endblock %}
+
+{% block content %}
+<!-- Hero Code Search Banner -->
+<div class="row mb-5">
+    <div class="col-lg-10 offset-lg-1">
+        <div class="card card-modern border-0 text-white p-4 p-md-5" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+            <div class="row align-items-center">
+                <div class="col-md-7 mb-4 mb-md-0">
+                    <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2 rounded-pill mb-3">
+                        <i class="bi bi-shield-check me-1"></i> Fast & Secure Access
+                    </span>
+                    <h1 class="fw-extrabold display-6 mb-2">Join a Voting Avenue</h1>
+                    <p class="text-slate-300 lead fs-6 mb-0">Enter a 8-digit voting code to verify eligibility and cast your vote.</p>
+                </div>
+                <div class="col-md-5">
+                    <form action="{% url 'search_poll' %}" method="post">
+                        {% csrf_token %}
+                        <div class="bg-white p-2 rounded-4 shadow-lg d-flex gap-2">
+                            <div class="flex-grow-1">
+                                {{ search_form.code }}
+                            </div>
+                            <button class="btn btn-gradient-primary rounded-3 px-4 fw-bold" type="submit">
+                                Search <i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Grid Overview -->
+<div class="row g-4">
+    <!-- Created Polls -->
+    <div class="col-lg-6">
+        <div class="card card-modern h-100 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1"><i class="bi bi-collection-play text-primary me-2"></i>Created Avenues</h4>
+                    <p class="text-muted small mb-0">Polls hosted by your account</p>
+                </div>
+                <a href="{% url 'create_poll' %}" class="btn btn-light btn-sm rounded-pill px-3 fw-semibold">
+                    <i class="bi bi-plus-lg me-1"></i> Create
+                </a>
+            </div>
+
+            {% if created_polls %}
+                <div class="vstack gap-3">
+                    {% for poll in created_polls %}
+                        <div class="p-3 rounded-4 bg-light d-flex justify-content-between align-items-center border border-slate-100">
+                            <div>
+                                <h6 class="fw-bold mb-1">{{ poll.title }}</h6>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge badge-code">{{ poll.unique_code }}</span>
+                                    <small class="text-muted"><i class="bi bi-people me-1"></i>{{ poll.votes.count }} votes</small>
+                                </div>
+                            </div>
+                            <a href="{% url 'poll_detail' poll.unique_code %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                Manage
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-folder-plus fs-1 d-block mb-2 text-slate-300"></i>
+                    <p class="mb-3">You haven't created any voting avenues yet.</p>
+                    <a href="{% url 'create_poll' %}" class="btn btn-gradient-primary btn-sm rounded-pill px-4">Create Your First Poll</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Cast Votes & Receipts -->
+    <div class="col-lg-6">
+        <div class="card card-modern h-100 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1"><i class="bi bi-check2-circle text-success me-2"></i>Your Cast Votes</h4>
+                    <p class="text-muted small mb-0">Audit log and cryptographic receipt tokens</p>
+                </div>
+            </div>
+
+            {% if voted_votes %}
+                <div class="vstack gap-3">
+                    {% for vote in voted_votes %}
+                        <div class="p-3 rounded-4 bg-light d-flex justify-content-between align-items-center border border-slate-100">
+                            <div>
+                                <h6 class="fw-bold mb-1">{{ vote.poll.title }}</h6>
+                                <small class="text-muted d-block">
+                                    Receipt: <code class="text-primary fw-bold">{{ vote.receipt_token }}</code>
+                                </small>
+                            </div>
+                            <a href="{% url 'poll_results' vote.poll.unique_code %}" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                                Results
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-ticket-perforated fs-1 d-block mb-2 text-slate-300"></i>
+                    <p class="mb-0">You haven't cast any votes yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

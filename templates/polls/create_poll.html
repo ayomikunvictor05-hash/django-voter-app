@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}Create Poll - VoterApp{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <div class="card card-modern p-4 p-md-5">
+            <h2 class="fw-extrabold mb-1"><i class="bi bi-plus-circle text-primary me-2"></i>Create Voting Avenue</h2>
+            <p class="text-muted mb-4">Set up your voting topic, scheduled times, choices, and access rules.</p>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Poll Title</label>
+                    {{ form.title }}
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Description</label>
+                    {{ form.description }}
+                </div>
+
+                <!-- Scheduling Section -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Voting Opens (Start Time)</label>
+                        {{ form.start_time }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Voting Closes (End Time)</label>
+                        {{ form.end_time }}
+                    </div>
+                </div>
+
+                <!-- Choices with Image Support -->
+                <div class="mb-4 p-4 bg-light rounded-4">
+                    <label class="form-label fw-bold d-block mb-3">Voting Choices (At least 2 required)</label>
+                    <div id="options-container" class="vstack gap-3">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-md-7">
+                                <input type="text" name="options" class="form-control rounded-3" placeholder="Option 1" required>
+                            </div>
+                            <div class="col-md-5">
+                                <input type="file" name="option_images" class="form-control rounded-3" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="row g-2 align-items-center">
+                            <div class="col-md-7">
+                                <input type="text" name="options" class="form-control rounded-3" placeholder="Option 2" required>
+                            </div>
+                            <div class="col-md-5">
+                                <input type="file" name="option_images" class="form-control rounded-3" accept="image/*">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill mt-3" onclick="addOption()">
+                        <i class="bi bi-plus-lg me-1"></i> Add Another Choice
+                    </button>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Results Visibility</label>
+                    {{ form.results_visibility }}
+                </div>
+
+                <!-- Access & Eligibility Rules -->
+                <div class="border-top pt-4 mt-4">
+                    <h5 class="fw-bold text-secondary mb-3"><i class="bi bi-shield-lock me-2"></i>Access & Eligibility Rules</h5>
+                    
+                    <div class="mb-4 p-3 bg-light rounded-4">
+                        <label class="form-label fw-bold mb-2">Allowed Email Domains</label>
+                        <div class="row g-2 mb-3">
+                            {% for checkbox in form.domain_checkboxes %}
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-check p-2 border rounded-3 bg-white">
+                                        {{ checkbox.tag }}
+                                        <label class="form-check-label fw-semibold ms-1" for="{{ checkbox.id_for_label }}">
+                                            {{ checkbox.choice_label }}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <label class="form-label text-muted small fw-semibold">Other Custom Domains (Optional)</label>
+                        {{ form.custom_domains }}
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Target Voter Group</label>
+                            {{ form.allowed_voter_group }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Passcode Protection</label>
+                            {{ form.passcode }}
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-gradient-primary btn-lg w-100 rounded-pill fw-bold mt-4">
+                    Create Scheduled Avenue
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function addOption() {
+        const container = document.getElementById('options-container');
+        const count = container.children.length + 1;
+        
+        const row = document.createElement('div');
+        row.className = 'row g-2 align-items-center';
+        row.innerHTML = `
+            <div class="col-md-7">
+                <input type="text" name="options" class="form-control rounded-3" placeholder="Option ${count}">
+            </div>
+            <div class="col-md-5">
+                <input type="file" name="option_images" class="form-control rounded-3" accept="image/*">
+            </div>
+        `;
+        container.appendChild(row);
+    }
+</script>
+{% endblock %}
